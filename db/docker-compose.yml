@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: booksync_postgres
+    environment:
+      POSTGRES_USER: sresht
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: readerapp
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+
+volumes:
+  pgdata:
