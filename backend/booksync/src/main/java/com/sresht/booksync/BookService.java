@@ -33,10 +33,12 @@ public class BookService {
         }
         Book b = new Book();
         try{
-            Files.createDirectories(Paths.get(uploadDir));
+            Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
+
+            Files.createDirectories(uploadPath);
 
             String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-            Path path = Paths.get(uploadDir, fileName);
+            Path path = uploadPath.resolve(fileName);
 
             file.transferTo(path.toFile());
 
@@ -44,7 +46,6 @@ public class BookService {
             b.setPdfName(file.getOriginalFilename());
             b.setFilePath(path.toString());
             b.setTotalPages(null);
-            b.setCurrentPage(1);
         }catch(Exception e){
             logger.error("Error: {}", e.getMessage());
         }

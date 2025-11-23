@@ -35,9 +35,4 @@ public class Book {
     @Setter
     @Column(name = "uploaded_at")
     private LocalDateTime uploadedAt = LocalDateTime.now();
-
-    @Setter
-    @Column(name = "current_page")
-    private Integer currentPage = 1;
-
 }
