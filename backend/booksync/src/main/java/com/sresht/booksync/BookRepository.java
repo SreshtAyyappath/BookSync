@@ -1,5 +1,6 @@
 package com.sresht.booksync;
 
+import com.sresht.booksync.dto.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

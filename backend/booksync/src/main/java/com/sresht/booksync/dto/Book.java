@@ -1,4 +1,4 @@
-package com.sresht.booksync;
+package com.sresht.booksync.dto;
 
 import jakarta.persistence.*;
 import lombok.Getter;

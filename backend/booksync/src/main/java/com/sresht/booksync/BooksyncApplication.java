@@ -11,11 +11,6 @@ public class BooksyncApplication {
 	@Value("${spring.datasource.password}")
 	private String dbPass;
 
-	@PostConstruct
-	public void init() {
-		System.out.println("🚨 DB PASSWORD USED BY SPRING = [" + dbPass + "]");
-	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(BooksyncApplication.class, args);
 	}
