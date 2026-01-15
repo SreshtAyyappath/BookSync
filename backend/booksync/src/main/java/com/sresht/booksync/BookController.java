@@ -9,17 +9,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
 
 @RestController
@@ -49,7 +45,7 @@ public class BookController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest req){
-        if (userRepo.existsByUsername(req.getUsername())) {
+            if (userRepo.existsByUsername(req.getUsername())) {
             return ResponseEntity.badRequest().body("Username Already Exists!!!!!");
         }
 
@@ -80,12 +76,19 @@ public class BookController {
 
 
     @PostMapping("/books/upload")
-    public void uploadPdf(@RequestParam("userId") Long userId,
+    public void uploadPdf(@AuthenticationPrincipal UserDetails userDetails,
                           @RequestParam("file") MultipartFile file){
         try {
-            bookService.insertBook(userId, file);
+            String userName = userDetails.getUsername();
+            bookService.insertBook(userName, file);
         }catch(Exception e){
             logger.error("Error in Controller: {}", e.getMessage());
         }
+    }
+
+    @GetMapping("/books")
+    public ResponseEntity<?> getBooks(@AuthenticationPrincipal UserDetails userDetails){
+        String userName = userDetails.getUsername();
+        return ResponseEntity.ok(bookService.getBooks(userName));
     }
 }
