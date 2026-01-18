@@ -29,29 +29,48 @@ public class JwtFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        String authHeader = request.getHeader("Authorization");
+        String path = request.getServletPath();
 
-        String username = null;
+        // Skip auth endpoints
+        if (path.startsWith("/auth")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String token = null;
+        String username = null;
 
+        // 1️⃣ Try Authorization header
+        String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
+        }
 
-            // **HERE you use your JwtService**
+        // 2️⃣ Fallback: query param (PDF open)
+        if (token == null) {
+            token = request.getParameter("token");
+        }
+
+        // 3️⃣ If we found a token, extract username
+        if (token != null) {
             username = jwtService.extractUsername(token);
         }
 
+        // 4️⃣ Authenticate if not already authenticated
         if (username != null &&
                 SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            UserDetails userDetails =
+                    userDetailsService.loadUserByUsername(username);
 
-            // **HERE the isValid() is actually used**
             if (jwtService.isValid(token, userDetails.getUsername())) {
 
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(
-                                userDetails, null, userDetails.getAuthorities());
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities()
+                        );
 
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
@@ -59,4 +78,5 @@ public class JwtFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+
 }

@@ -63,10 +63,22 @@ public class BookService {
         return bookRepo.save(b);
     }
 
+    public Long getUserIdByUsername(String username) {
+        return userRepo.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"))
+                .getId();
+    }
+
     public List<Book> getBooks(String userName){
         User user  = userRepo.findByUsername(userName)
                 .orElseThrow();
 
         return bookRepo.findByUserId(user.getId());
+    }
+
+    public Book getBookByIdAndUser(Long id, String username){
+        Long userID = getUserIdByUsername(username);
+        Book book = bookRepo.findByIdAndUserId(id, userID).orElseThrow(() -> new RuntimeException("Book not found"));
+        return book;
     }
 }
