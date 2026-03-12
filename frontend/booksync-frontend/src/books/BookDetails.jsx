@@ -51,7 +51,7 @@ export default function BookDetails() {
         </p>
       )}
 
-      <button onClick={openPdf}>📖 Open PDF</button>
+      <button onClick={openPdf}>Open PDF</button>
     </div>
   );
 }

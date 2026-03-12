@@ -14,6 +14,7 @@ export default function AppRoutes() {
         <Route path="/register" element={<Register />} />
         <Route path="/books" element={<BooksList />} />
         <Route path="/books/:id" element={<BookDetails />} />
+        {/* <Route path="/books/upload" element={<BookUpload />} /> */}
       </Routes>
     </BrowserRouter>
   );

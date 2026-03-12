@@ -1,22 +1,30 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
 * {
     box-sizing: border-box;
   }
   
-  .login-page {
-    height: 100vh;
-    background: 
-      linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-      url("/bg.jpg") center/cover no-repeat;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: "Inter", sans-serif;
-  }
+
+body {
+  background: black;
+}
+
+.login-page {
+  flex: 1;                 /* fill entire root */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: black;
+  font-family: "Inter", sans-serif;
+}
   
   .login-card {
     width: 360px;
     padding: 2.5rem;
-    background: rgba(255, 255, 255, 0.08);
+    background: black;
     backdrop-filter: blur(12px);
     border-radius: 16px;
     box-shadow: 0 20px 40px rgba(0,0,0,0.6);
@@ -59,7 +67,6 @@
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    background: linear-gradient(135deg, #ff512f, #dd2476);
     color: white;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
   }

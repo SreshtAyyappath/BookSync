@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 
@@ -6,6 +6,30 @@ export default function BooksList() {
   const [books, setBooks] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
+
+  const handleUpload = async (file) => {
+    try{
+      const formData = new FormData();
+      formData.append("file", file);
+      await api.post("/books/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },});
+      navigate("/books")
+    }catch(err){
+      setError("Error");
+    }
+  }
+  const handleClick = () => {
+    fileInputRef.current.click();
+  }
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    handleUpload(file);
+    console.log(file);
+  };
 
   useEffect(() => {
     api
@@ -25,6 +49,15 @@ export default function BooksList() {
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       {books.length === 0 && !error && <p>No PDFs uploaded</p>}
+        <input
+        type="file"
+        accept="application/pdf"
+        ref={fileInputRef}
+        style={{ display: "none" }}
+        onChange={handleFileChange}
+        />
+        <button onClick={handleClick}>upload</button>
+      
 
       <ul>
         {books.map((book) => (
